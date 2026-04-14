@@ -10,9 +10,6 @@ from django.db.models import Q
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def global_search(request):
-    """
-    Search across providers and facilities using a single query string.
-    """
     query = request.query_params.get('q', '')
     
     if not query:
@@ -21,14 +18,12 @@ def global_search(request):
             "facilities": []
         })
 
-    # Search Providers
     providers = Providers.objects.filter(
         Q(provider_name__icontains=query) | 
         Q(provider_city__icontains=query) |
         Q(provider_type__icontains=query)
     ).filter(is_verified=True)
     
-    # Search Facilities
     facilities = Facilities.objects.filter(
         Q(facility_name__icontains=query) |
         Q(facility_city__icontains=query) |
