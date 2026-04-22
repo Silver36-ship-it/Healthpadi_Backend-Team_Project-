@@ -77,7 +77,7 @@ def resolve_report(request, report_id):
         )
     report.resolve()
     return Response(
-        {'message': f'Report {report_id} reviewed successfully'},
+        {'message': f'Report {report_id} resolved successfully'},
         status=status.HTTP_200_OK
     )
 

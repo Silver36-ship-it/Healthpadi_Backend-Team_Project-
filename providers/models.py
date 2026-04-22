@@ -8,7 +8,6 @@ class Providers(models.Model):
     provider_city = models.CharField(max_length=100, blank=False)
     provider_state = models.CharField(max_length=100, blank=False)
 
-
     provider_phone = models.CharField(max_length=20, blank=True)
     provider_email = models.EmailField(blank=True)
 
