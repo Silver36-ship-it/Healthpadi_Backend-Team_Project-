@@ -1,4 +1,6 @@
 import os
+import pymysql
+pymysql.install_as_MySQLdb()
 from pathlib import Path
 from datetime import timedelta
 from dotenv import load_dotenv
@@ -57,8 +59,13 @@ DATABASES = {
     'default': dj_database_url.config(
         default=f"mysql://{os.getenv('DB_USER', 'root')}:{os.getenv('DB_PASSWORD', '')}@{os.getenv('DB_HOST', '127.0.0.1')}:{os.getenv('DB_PORT', '3306')}/{os.getenv('DB_NAME', 'healthpadi')}",
         conn_max_age=600,
-        ssl_require=os.getenv('DATABASE_URL') is not None
     )
+}
+
+# Aiven requires SSL — set it explicitly using the CA cert
+DATABASES['default']['OPTIONS'] = {
+    'ssl': {'ca': os.getenv('MYSQL_SSL_CA_PATH', '/etc/secrets/ca.pem')}
+}  )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
