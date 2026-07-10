@@ -101,8 +101,10 @@ SIMPLE_JWT = {
 }
 
 CORS_ALLOWED_ORIGINS = [
-    "https://healthpadi-frontend-ecru.vercel.app/",
-    "http://localhost:3000",  # for local dev
+    "https://healthpadi-frontend-ecru.vercel.app",
+    "http://localhost:3000",
+    "http://localhost:8080",
+    "http://localhost:5173",
 ]
 CORS_ALLOW_CREDENTIALS = True
 CORS_ALLOW_CREDENTIALS = True
