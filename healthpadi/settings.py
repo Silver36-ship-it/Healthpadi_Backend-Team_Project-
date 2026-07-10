@@ -65,7 +65,6 @@ DATABASES = {
 # Aiven requires SSL — set it explicitly using the CA cert
 DATABASES['default']['OPTIONS'] = {
     'ssl': {'ca': os.getenv('MYSQL_SSL_CA_PATH', '/etc/secrets/ca.pem')}
-}  )
 }
 
 AUTH_PASSWORD_VALIDATORS = [
