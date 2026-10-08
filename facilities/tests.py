@@ -52,3 +52,9 @@ class FacilityListTests(TestCase):
             [facility['facility_id'] for facility in response.data],
             [self.kano_facility.facility_id],
         )
+
+    def test_list_uses_prefetched_pricing_without_per_facility_queries(self):
+        with self.assertNumQueries(3):
+            response = self.client.get('/api/facilities/')
+
+        self.assertEqual(response.status_code, 200)

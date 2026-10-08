@@ -70,7 +70,7 @@ def get_nearby_facilities(request):
     facilities = Facilities.objects.filter(
         is_verified=True, 
         facility_state__icontains='Lagos'
-    )
+    ).prefetch_related('pricing', 'pricing__history')
     if city:
         facilities = facilities.filter(facility_city__icontains=city)
     if state:

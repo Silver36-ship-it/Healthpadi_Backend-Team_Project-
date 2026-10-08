@@ -43,8 +43,8 @@ class FacilityProcedureSerializer(serializers.ModelSerializer):
 
 class FacilitiesSerializer(serializers.ModelSerializer):
     pricing = FacilityProcedureSerializer(many=True, read_only=True)
-    is_truly_verified = serializers.BooleanField(read_only=True)
-    is_price_stale = serializers.BooleanField(read_only=True)
+    is_truly_verified = serializers.SerializerMethodField()
+    is_price_stale = serializers.SerializerMethodField()
     days_since_update = serializers.SerializerMethodField()
 
     class Meta:
@@ -52,11 +52,25 @@ class FacilitiesSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
     def get_days_since_update(self, obj):
-        latest = obj.pricing.order_by('-last_verified').first()
+        latest = self._latest_price_update(obj)
         if not latest:
             return None
-        delta = timezone.now() - latest.last_verified
+        delta = timezone.now() - latest
         return delta.days
+
+    def get_is_price_stale(self, obj):
+        latest = self._latest_price_update(obj)
+        return latest is None or latest < timezone.now() - timedelta(days=30)
+
+    def get_is_truly_verified(self, obj):
+        return obj.is_verified and not self.get_is_price_stale(obj)
+
+    @staticmethod
+    def _latest_price_update(obj):
+        return max(
+            (procedure.last_verified for procedure in obj.pricing.all()),
+            default=None,
+        )
 
 
 class CommunityPriceSerializer(serializers.ModelSerializer):
