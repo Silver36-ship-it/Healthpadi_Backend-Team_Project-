@@ -27,11 +27,8 @@ def is_provider(user):
 @api_view(['GET'])
 @permission_classes([AllowAny])
 def get_facilities(request):
-    """List all verified facilities. Supports filtering by city, state, type."""
-    facilities = Facilities.objects.filter(
-        is_verified=True, 
-        facility_state__icontains='Lagos'
-    ).prefetch_related('pricing')
+    """List all facilities with their procedures. Supports filtering by city, state, type."""
+    facilities = Facilities.objects.all().prefetch_related('pricing', 'pricing__history')
 
     city = request.query_params.get('city')
     state = request.query_params.get('state')
